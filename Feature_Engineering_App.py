@@ -36,13 +36,13 @@ def main():
             
                 # Add a download button to download the processed data as a CSV file
         if st.sidebar.button("Download processed data"):
-        st.write("Processed Data:")
-        st.write(df)
-        csv = df.to_csv(index=False)
-        b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
-        href = f'<a href="data:file/csv;base64,{b64}" download="processed_data.csv">Download processed data</a>'
-        st.markdown(href, unsafe_allow_html=True)
+            st.write("Processed Data:")
+            st.write(df)
+            csv = df.to_csv(index=False)
+            b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+            href = f'<a href="data:file/csv;base64,{b64}" download="processed_data.csv">Download processed data</a>'
+            st.markdown(href, unsafe_allow_html=True)
 
 
 if name == 'main':
-main()
+    main()
