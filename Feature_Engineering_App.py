@@ -16,6 +16,10 @@ def main():
         df = load_data(uploaded_file)
         st.write("Original Data:")
         st.write(df)
+        
+        # Drop duplicate columns
+        df = df.T.drop_duplicates().T
+
 
         # Add feature transformation options to the sidebar
         if st.sidebar.checkbox("Scale numerical columns"):
