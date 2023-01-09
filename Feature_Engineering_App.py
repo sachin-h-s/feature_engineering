@@ -18,7 +18,7 @@ def main():
         st.write(df)
         
         # Drop duplicate columns
-        df = df.T.drop_duplicates().T
+      #  df = df.T.drop_duplicates().T
 
 
         # Add feature transformation options to the sidebar
