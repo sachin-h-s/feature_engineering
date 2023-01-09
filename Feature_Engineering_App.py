@@ -44,5 +44,5 @@ def main():
             st.markdown(href, unsafe_allow_html=True)
 
 
-if name == 'main':
+if __name__=='__main__':
     main()
