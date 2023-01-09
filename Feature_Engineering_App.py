@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
 import base64
-
+@st.cache(allow_output_mutation=True)
 @st.cache
 def load_data(file):
     return pd.read_csv(file)
-@st.cache(allow_output_mutation=True)
+
 
 def main():
     st.title("Feature Engineering App")
