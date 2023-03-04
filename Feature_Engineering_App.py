@@ -117,7 +117,7 @@
 import streamlit as st
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
-from sklearn.feature_extraction import FeatureHasher
+from sklearn.preprocessing import OneHotEncoder
 from base64 import b64encode
 
 
@@ -127,13 +127,14 @@ def preprocess_data(data, numeric_cols, categorical_cols):
     scaler = StandardScaler()
     data[numeric_cols] = scaler.fit_transform(data[numeric_cols])
     
-    # Hash encode categorical columns
-    hasher = FeatureHasher(n_features=1000, input_type='string')
-    hashed_data = hasher.transform(data[categorical_cols].astype(str))
-    hashed_df = pd.DataFrame(hashed_data.toarray(), columns=['hashed_' + str(i) for i in range(1000)])
+    # One-hot encode categorical columns
+    encoder = OneHotEncoder(handle_unknown='ignore')
+    encoder.fit(data[categorical_cols].values)
+    encoded_data = encoder.transform(data[categorical_cols].values)
+    encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names(categorical_cols))
     
     # Combine numerical and categorical columns
-    preprocessed_data = pd.concat([data[numeric_cols], hashed_df], axis=1)
+    preprocessed_data = pd.concat([data[numeric_cols], encoded_df], axis=1)
     
     return preprocessed_data
 
@@ -156,7 +157,7 @@ def main():
         
         # Select columns to preprocess
         numeric_cols = st.multiselect("Select numeric columns to scale", data.select_dtypes(include=['float', 'int']).columns.tolist())
-        categorical_cols = st.multiselect("Select categorical columns to hash", data.select_dtypes(include=['object']).columns.tolist())
+        categorical_cols = st.multiselect("Select categorical columns to one-hot encode", data.select_dtypes(include=['object']).columns.tolist())
         
         # Preprocess data
         preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
@@ -173,3 +174,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
