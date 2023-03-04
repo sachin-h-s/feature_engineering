@@ -114,153 +114,153 @@
 
 
 
-# import streamlit as st
-# import pandas as pd
-# from sklearn.preprocessing import StandardScaler
-# from sklearn.preprocessing import OneHotEncoder
-# from base64 import b64encode
+import streamlit as st
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import OneHotEncoder
+from base64 import b64encode
 
 
-# # Define function to preprocess the data
-# def preprocess_data(data, numeric_cols, categorical_cols):
-#     # Scale numerical columns
-#     scaler = StandardScaler()
-#     data[numeric_cols] = scaler.fit_transform(data[numeric_cols])
+# Define function to preprocess the data
+def preprocess_data(data, numeric_cols, categorical_cols):
+    # Scale numerical columns
+    scaler = StandardScaler()
+    data[numeric_cols] = scaler.fit_transform(data[numeric_cols])
     
-#     # One-hot encode categorical columns
-#     encoder = OneHotEncoder(handle_unknown='ignore')
-#     encoder.fit(data[categorical_cols].values)
+    # One-hot encode categorical columns
+    encoder = OneHotEncoder(handle_unknown='ignore')
+    encoder.fit(data[categorical_cols].values)
     
-#     # Check if any categorical columns have non-empty values
-#     non_empty_cols = data[categorical_cols].columns[data[categorical_cols].count() > 0]
-#     if len(non_empty_cols) == 0:
-#         st.warning("No selected categorical columns have any values. Please select categorical columns with non-empty values to one-hot encode.")
-#         preprocessed_data = data[numeric_cols]
-#     else:
-#         encoded_data = encoder.transform(data[non_empty_cols].values)
-#         encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names_out(non_empty_cols))
+    # Check if any categorical columns have non-empty values
+    non_empty_cols = data[categorical_cols].columns[data[categorical_cols].count() > 0]
+    if len(non_empty_cols) == 0:
+        st.warning("No selected categorical columns have any values. Please select categorical columns with non-empty values to one-hot encode.")
+        preprocessed_data = data[numeric_cols]
+    else:
+        encoded_data = encoder.transform(data[non_empty_cols].values)
+        encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names_out(non_empty_cols))
     
-#         # Combine numerical and categorical columns
-#         preprocessed_data = pd.concat([data[numeric_cols], encoded_df], axis=1)
+        # Combine numerical and categorical columns
+        preprocessed_data = pd.concat([data[numeric_cols], encoded_df], axis=1)
     
-#     return preprocessed_data
+    return preprocessed_data
 
 
-# # Define Streamlit app
-# def main():
-#     # Set app title
-#     st.title("Data Preprocessing App")
+# Define Streamlit app
+def main():
+    # Set app title
+    st.title("Data Preprocessing App")
     
-#     # Create file uploader
-#     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+    # Create file uploader
+    uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
     
-#     if uploaded_file is not None:
-#         # Load data from uploaded file
-#         data = pd.read_csv(uploaded_file)
+    if uploaded_file is not None:
+        # Load data from uploaded file
+        data = pd.read_csv(uploaded_file)
         
-#         # Show original data
-#         st.subheader("Original Data")
-#         st.write(data)
+        # Show original data
+        st.subheader("Original Data")
+        st.write(data)
         
-#         # Select columns to preprocess
-#         numeric_cols = st.multiselect("Select numeric columns to scale", data.select_dtypes(include=['float', 'int']).columns.tolist())
-#         categorical_cols = st.multiselect("Select categorical columns to one-hot encode", data.select_dtypes(include=['object']).columns.tolist())
+        # Select columns to preprocess
+        numeric_cols = st.multiselect("Select numeric columns to scale", data.select_dtypes(include=['float', 'int']).columns.tolist())
+        categorical_cols = st.multiselect("Select categorical columns to one-hot encode", data.select_dtypes(include=['object']).columns.tolist())
         
-#         # Check if any columns are selected
-#         if not numeric_cols and not categorical_cols:
-#             st.warning("Please select at least one column to preprocess.")
-#         else:
-#             # Check if selected categorical columns contain non-empty columns
-#             non_empty_cols = data[categorical_cols].columns[data[categorical_cols].count() > 0]
-#             if len(non_empty_cols) == 0:
-#                 st.warning("No selected categorical columns have any values. Please select categorical columns with non-empty values to preprocess.")
-#             else:
-#                 # Preprocess data
-#                 preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
+        # Check if any columns are selected
+        if not numeric_cols and not categorical_cols:
+            st.warning("Please select at least one column to preprocess.")
+        else:
+            # Check if selected categorical columns contain non-empty columns
+            non_empty_cols = data[categorical_cols].columns[data[categorical_cols].count() > 0]
+            if len(non_empty_cols) == 0:
+                st.warning("No selected categorical columns have any values. Please select categorical columns with non-empty values to preprocess.")
+            else:
+                # Preprocess data
+                preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
                 
-#                 # Show preprocessed data
-#                 st.subheader("Preprocessed Data")
-#                 st.write(preprocessed_data)
+                # Show preprocessed data
+                st.subheader("Preprocessed Data")
+                st.write(preprocessed_data)
                 
-#                 # Create download link for preprocessed data
-#                 csv = preprocessed_data.to_csv(index=False)
-#                 href = f'<a href="data:file/csv;base64,{b64encode(csv.encode()).decode()}" download="preprocessed_data.csv">Download Preprocessed Data</a>'
-#                             # Show download link for preprocessed data
-#                 st.markdown(href, unsafe_allow_html=True)
+                # Create download link for preprocessed data
+                csv = preprocessed_data.to_csv(index=False)
+                href = f'<a href="data:file/csv;base64,{b64encode(csv.encode()).decode()}" download="preprocessed_data.csv">Download Preprocessed Data</a>'
+                            # Show download link for preprocessed data
+                st.markdown(href, unsafe_allow_html=True)
  
 
 
 
 
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
 
 
 
-import streamlit as st
-import pandas as pd
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+# import streamlit as st
+# import pandas as pd
+# from sklearn.preprocessing import StandardScaler, OneHotEncoder
 
-# Set page title
-st.set_page_config(page_title="Data Preprocessing App")
+# # Set page title
+# st.set_page_config(page_title="Data Preprocessing App")
 
-# Define function to perform data preprocessing
-def preprocess_data(data, numeric_cols, categorical_cols):
-    # Scale numerical columns
-    scaler = StandardScaler()
-    scaled_data = scaler.fit_transform(data[numeric_cols])
-    scaled_df = pd.DataFrame(scaled_data, columns=numeric_cols)
+# # Define function to perform data preprocessing
+# def preprocess_data(data, numeric_cols, categorical_cols):
+#     # Scale numerical columns
+#     scaler = StandardScaler()
+#     scaled_data = scaler.fit_transform(data[numeric_cols])
+#     scaled_df = pd.DataFrame(scaled_data, columns=numeric_cols)
 
-    # One-hot encode categorical columns
-    encoder = OneHotEncoder(sparse=False)
-    encoded_data = encoder.fit_transform(data[categorical_cols])
-    encoded_df = pd.DataFrame(encoded_data, columns=encoder.get_feature_names(categorical_cols))
+#     # One-hot encode categorical columns
+#     encoder = OneHotEncoder(sparse=False)
+#     encoded_data = encoder.fit_transform(data[categorical_cols])
+#     encoded_df = pd.DataFrame(encoded_data, columns=encoder.get_feature_names(categorical_cols))
 
-    # Combine scaled numerical and encoded categorical data
-    preprocessed_data = pd.concat([scaled_df, encoded_df], axis=1)
+#     # Combine scaled numerical and encoded categorical data
+#     preprocessed_data = pd.concat([scaled_df, encoded_df], axis=1)
 
-    return preprocessed_data
+#     return preprocessed_data
 
-# Define Streamlit app
-def app():
-    # Set app title
-    st.title("Data Preprocessing App")
+# # Define Streamlit app
+# def app():
+#     # Set app title
+#     st.title("Data Preprocessing App")
 
-    # Allow user to upload CSV file
-    file = st.file_uploader("Upload CSV file", type=["csv"])
+#     # Allow user to upload CSV file
+#     file = st.file_uploader("Upload CSV file", type=["csv"])
 
-    if file is not None:
-        # Read in CSV file as dataframe
-        data = pd.read_csv(file)
+#     if file is not None:
+#         # Read in CSV file as dataframe
+#         data = pd.read_csv(file)
 
-        # Allow user to select categorical columns
-        categorical_cols = st.multiselect("Select categorical columns", data.columns, key='categorical')
+#         # Allow user to select categorical columns
+#         categorical_cols = st.multiselect("Select categorical columns", data.columns, key='categorical')
 
-        # Allow user to select numerical columns
-        numeric_cols = st.multiselect("Select numerical columns", data.columns, key='numeric', default=data.columns[:-1])
+#         # Allow user to select numerical columns
+#         numeric_cols = st.multiselect("Select numerical columns", data.columns, key='numeric', default=data.columns[:-1])
 
-        # Sort selected columns
-        categorical_cols.sort()
-        numeric_cols.sort()
+#         # Sort selected columns
+#         categorical_cols.sort()
+#         numeric_cols.sort()
 
-        # Print selected columns
-        st.write("Selected categorical columns:", categorical_cols)
-        st.write("Selected numerical columns:", numeric_cols)
+#         # Print selected columns
+#         st.write("Selected categorical columns:", categorical_cols)
+#         st.write("Selected numerical columns:", numeric_cols)
 
-        # Preprocess data
-        preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
+#         # Preprocess data
+#         preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
 
-        # Allow user to download preprocessed data as CSV file
-        csv = preprocessed_data.to_csv(index=False)
-        b64 = base64.b64encode(csv.encode()).decode()
-        href = f'<a href="data:file/csv;base64,{b64}" download="preprocessed_data.csv">Download preprocessed data</a>'
-        st.markdown(href, unsafe_allow_html=True)
+#         # Allow user to download preprocessed data as CSV file
+#         csv = preprocessed_data.to_csv(index=False)
+#         b64 = base64.b64encode(csv.encode()).decode()
+#         href = f'<a href="data:file/csv;base64,{b64}" download="preprocessed_data.csv">Download preprocessed data</a>'
+#         st.markdown(href, unsafe_allow_html=True)
 
-        # Show preprocessed data
-        st.write("Preprocessed data:")
-        st.write(preprocessed_data)
+#         # Show preprocessed data
+#         st.write("Preprocessed data:")
+#         st.write(preprocessed_data)
 
-# Run Streamlit app
-if __name__ == '__main__':
-    app()
+# # Run Streamlit app
+# if __name__ == '__main__':
+#     app()
