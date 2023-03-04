@@ -131,7 +131,7 @@ def preprocess_data(data, numeric_cols, categorical_cols):
     encoder = OneHotEncoder(handle_unknown='ignore')
     encoder.fit(data[categorical_cols].values)
     encoded_data = encoder.transform(data[categorical_cols].values)
-    encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names(categorical_cols))
+    encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names_out(categorical_cols))
     
     # Combine numerical and categorical columns
     preprocessed_data = pd.concat([data[numeric_cols], encoded_df], axis=1)
@@ -174,4 +174,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
