@@ -159,17 +159,21 @@ def main():
         numeric_cols = st.multiselect("Select numeric columns to scale", data.select_dtypes(include=['float', 'int']).columns.tolist())
         categorical_cols = st.multiselect("Select categorical columns to one-hot encode", data.select_dtypes(include=['object']).columns.tolist())
         
-        # Preprocess data
-        preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
-        
-        # Show preprocessed data
-        st.subheader("Preprocessed Data")
-        st.write(preprocessed_data)
-        
-        # Create download link for preprocessed data
-        csv = preprocessed_data.to_csv(index=False)
-        href = f'<a href="data:file/csv;base64,{b64encode(csv.encode()).decode()}" download="preprocessed_data.csv">Download Preprocessed Data</a>'
-        st.markdown(href, unsafe_allow_html=True)
+        # Check if any columns are selected
+        if not numeric_cols and not categorical_cols:
+            st.warning("Please select at least one column to preprocess.")
+        else:
+            # Preprocess data
+            preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
+            
+            # Show preprocessed data
+            st.subheader("Preprocessed Data")
+            st.write(preprocessed_data)
+            
+            # Create download link for preprocessed data
+            csv = preprocessed_data.to_csv(index=False)
+            href = f'<a href="data:file/csv;base64,{b64encode(csv.encode()).decode()}" download="preprocessed_data.csv">Download Preprocessed Data</a>'
+            st.markdown(href, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
