@@ -51,10 +51,12 @@
 
 # if __name__=='__main__':
 #     main()
+
 import streamlit as st
 import pandas as pd
 import base64
 
+@st.cache(allow_output_mutation=True)
 def load_data(file):
     return pd.read_csv(file)
 
@@ -63,22 +65,10 @@ def main():
     st.sidebar.title("Options")
 
     uploaded_file = st.sidebar.file_uploader("Choose a CSV file:")
-    
-    # Check if the uploaded file is the same as the previously uploaded file
-    if 'data' not in st.session_state:
-        st.session_state['data'] = None
-    if uploaded_file is not None and uploaded_file != st.session_state['data']:
-        st.session_state['data'] = uploaded_file
+    if uploaded_file is not None:
         df = load_data(uploaded_file)
-    else:
-        df = st.session_state['data']
-    
-    if df is not None:
         st.write("Original Data:")
         st.write(df)
-
-        # Drop duplicate columns
-        # df = df.T.drop_duplicates().T
 
         # Add feature transformation options to the sidebar
         if st.sidebar.checkbox("Scale numerical columns"):
@@ -89,14 +79,14 @@ def main():
                 df[df.select_dtypes(include='number').columns] = (df[df.select_dtypes(include='number').columns] - df[df.select_dtypes(include='number').columns].mean()) / df[df.select_dtypes(include='number').columns].std()
 
         if st.sidebar.checkbox("One-hot encode categorical columns"):
-            df = pd.get_dummies(df, columns=df.select_dtypes(include='object').columns)
+            df = pd.get_dummies(df)
 
         if st.sidebar.checkbox("Add polynomial features"):
             degree = st.sidebar.slider("Select polynomial degree:", 1, 5, 2)
             from sklearn.preprocessing import PolynomialFeatures
             poly = PolynomialFeatures(degree=degree)
             df = pd.DataFrame(poly.fit_transform(df))
-
+            
         # Add a download button to download the processed data as a CSV file
         if st.sidebar.button("Download processed data"):
             st.write("Processed Data:")
@@ -108,3 +98,4 @@ def main():
 
 if __name__=='__main__':
     main()
+
