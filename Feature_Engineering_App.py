@@ -56,6 +56,7 @@ import streamlit as st
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import OneHotEncoder
+from base64 import b64encode
 
 
 # Define function to preprocess the data
@@ -67,7 +68,7 @@ def preprocess_data(data, numeric_cols, categorical_cols):
     # One-hot encode categorical columns
     encoder = OneHotEncoder()
     encoded_data = encoder.fit_transform(data[categorical_cols])
-    encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names(categorical_cols))
+    encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names_out(categorical_cols))
     
     # Combine numerical and categorical columns
     preprocessed_data = pd.concat([data[numeric_cols], encoded_df], axis=1)
