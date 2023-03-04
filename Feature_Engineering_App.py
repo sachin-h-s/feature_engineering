@@ -79,7 +79,10 @@ def main():
                 df[df.select_dtypes(include='number').columns] = (df[df.select_dtypes(include='number').columns] - df[df.select_dtypes(include='number').columns].mean()) / df[df.select_dtypes(include='number').columns].std()
 
         if st.sidebar.checkbox("One-hot encode categorical columns"):
-            df = pd.get_dummies(df)
+            # Identify categorical columns
+            categorical_cols = df.select_dtypes(include=["object"]).columns
+            # One-hot encode categorical columns
+            df = pd.get_dummies(df, columns=categorical_cols)
 
         if st.sidebar.checkbox("Add polynomial features"):
             degree = st.sidebar.slider("Select polynomial degree:", 1, 5, 2)
