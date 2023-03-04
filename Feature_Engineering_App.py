@@ -131,10 +131,15 @@ def preprocess_data(data, numeric_cols, categorical_cols):
     encoder = OneHotEncoder(handle_unknown='ignore')
     encoder.fit(data[categorical_cols].values)
     encoded_data = encoder.transform(data[categorical_cols].values)
-    encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names_out(categorical_cols))
     
-    # Combine numerical and categorical columns
-    preprocessed_data = pd.concat([data[numeric_cols], encoded_df], axis=1)
+    if encoded_data.shape[1] == 0:
+        st.warning("No categorical columns were encoded. Please select categorical columns with non-empty values to one-hot encode.")
+        preprocessed_data = data[numeric_cols]
+    else:
+        encoded_df = pd.DataFrame(encoded_data.toarray(), columns=encoder.get_feature_names_out(categorical_cols))
+    
+        # Combine numerical and categorical columns
+        preprocessed_data = pd.concat([data[numeric_cols], encoded_df], axis=1)
     
     return preprocessed_data
 
@@ -163,17 +168,22 @@ def main():
         if not numeric_cols and not categorical_cols:
             st.warning("Please select at least one column to preprocess.")
         else:
-            # Preprocess data
-            preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
-            
-            # Show preprocessed data
-            st.subheader("Preprocessed Data")
-            st.write(preprocessed_data)
-            
-            # Create download link for preprocessed data
-            csv = preprocessed_data.to_csv(index=False)
-            href = f'<a href="data:file/csv;base64,{b64encode(csv.encode()).decode()}" download="preprocessed_data.csv">Download Preprocessed Data</a>'
-            st.markdown(href, unsafe_allow_html=True)
+            # Check if selected columns contain non-empty columns
+            non_empty_cols = data[numeric_cols + categorical_cols].columns[data[numeric_cols + categorical_cols].count() > 0]
+            if len(non_empty_cols) == 0:
+                st.warning("No selected columns have any values. Please select columns with non-empty values to preprocess.")
+            else:
+                # Preprocess data
+                preprocessed_data = preprocess_data(data, numeric_cols, categorical_cols)
+                
+                # Show preprocessed data
+                st.subheader("Preprocessed Data")
+                st.write(preprocessed_data)
+                
+                # Create download link for preprocessed data
+                csv = preprocessed_data.to_csv(index=False)
+                href = f'<a href="data:file/csv;base64,{b64encode(csv.encode()).decode()}" download="preprocessed_data.csv">Download Preprocessed Data</a>'
+                st.markdown(href, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
